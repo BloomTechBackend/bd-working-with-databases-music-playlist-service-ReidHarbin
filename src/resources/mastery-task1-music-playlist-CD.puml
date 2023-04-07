@@ -1,1 +1,73 @@
-PARTICIPANTS: use this file for creating the class diagram in mastery task 01
+@startuml
+
+PlaylistDao -o CreatePlaylistActivity
+GetPlaylistActivity o- PlaylistDao
+PlaylistDao --o UpdatePlaylistActivity
+PlaylistDao --o GetPlaylistSongsActivity
+AddSongToPlaylistActivity o-- PlaylistDao
+AddSongToPlaylistActivity o- AlbumTrackDao
+
+Playlist o-- AlbumTrack
+
+class Playlist {
+    - @DynamoDBHashKey id :  String
+    - name : String
+    - customerId : String
+    - songCount : Integer
+    - tags : Set<String>
+    - songList : List<AlbumTrack>
+
+    + getId() : String
+    + getSongList() : List<AlbumTrack>
+    + setSongList()
+}
+class AddSongToPlaylistActivity {
+    - playlistDao : PlaylistDao
+    - albumTrackDao : AlbumTrackDao
+
+    + handleRequest(final AddSongToPlaylistRequest addSongToPlaylistRequest, Context context) : AddSongToPlaylistResult
+}
+class CreatePlaylistActivity {
+    - playlistDao : PlaylistDao
+
+    + handleRequest(final CreatePlaylistRequest createPlaylistRequest, Context context) : CreatePlaylistResult
+}
+class GetPlaylistActivity {
+    - playlistDao : PlaylistDao
+
+    + handleRequest(final GetPlaylistRequest getPlaylistRequest, Context context) : GetPlaylistResult
+}
+class GetPlaylistSongsActivity {
+    - playlistDao : PlaylistDao
+
+    + handleRequest(final GetPlaylistSongsRequest getPlaylistSongsRequest, Context context): GetPlaylistSongsResult
+}
+class UpdatePlaylistActivity {
+    - playlistDao: PlaylistDao
+
+    + handleRequest(final UpdatePlaylistRequest updatePlaylistRequest, Context context) : UpdatePlaylistResult
+}
+
+class AlbumTrack {
+    - @DynamoDBHashKey asin : String
+    - @DynamoDBRangeKey trackNumber : Integer
+    - albumName : String
+    - songTitle : String
+}
+class AlbumTrackDao {
+    - dynamoDbMapper : DynamoDBMapper
+    + getAlbumTrack(Integer) : AlbumTrack
+}
+class PlaylistDao {
+    - dynamoDbMapper : DynamoDBMapper
+    +getPlaylist(String) : Playlist
+}
+
+class AlbumTrackNotFoundException {
+}
+class InvalidAttributeValueException {
+}
+class PlaylistNotFoundException {
+}
+
+@enduml
