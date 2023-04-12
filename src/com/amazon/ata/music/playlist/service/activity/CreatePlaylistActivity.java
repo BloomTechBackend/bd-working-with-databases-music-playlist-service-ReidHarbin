@@ -1,14 +1,21 @@
 package com.amazon.ata.music.playlist.service.activity;
 
+import com.amazon.ata.music.playlist.service.converters.ModelConverter;
+import com.amazon.ata.music.playlist.service.exceptions.InvalidAttributeValueException;
 import com.amazon.ata.music.playlist.service.models.requests.CreatePlaylistRequest;
 import com.amazon.ata.music.playlist.service.models.results.CreatePlaylistResult;
 import com.amazon.ata.music.playlist.service.models.PlaylistModel;
 import com.amazon.ata.music.playlist.service.dynamodb.PlaylistDao;
 
+import com.amazon.ata.music.playlist.service.dynamodb.models.Playlist;
+import com.amazon.ata.music.playlist.service.util.MusicPlaylistServiceUtils;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.inject.Inject;
+import java.util.HashSet;
 
 /**
  * Implementation of the CreatePlaylistActivity for the MusicPlaylistService's CreatePlaylist API.
@@ -24,6 +31,7 @@ public class CreatePlaylistActivity implements RequestHandler<CreatePlaylistRequ
      *
      * @param playlistDao PlaylistDao to access the playlists table.
      */
+    @Inject
     public CreatePlaylistActivity(PlaylistDao playlistDao) {
         this.playlistDao = playlistDao;
     }
@@ -45,8 +53,26 @@ public class CreatePlaylistActivity implements RequestHandler<CreatePlaylistRequ
     public CreatePlaylistResult handleRequest(final CreatePlaylistRequest createPlaylistRequest, Context context) {
         log.info("Received CreatePlaylistRequest {}", createPlaylistRequest);
 
+
+        String createPlaylistRequestName = createPlaylistRequest.getName();
+        String createPlaylistRequestCustomerID = createPlaylistRequest.getCustomerId();
+        if (!MusicPlaylistServiceUtils.isValidString(createPlaylistRequestCustomerID)) {
+            throw new InvalidAttributeValueException(String.format("The CustomerID contained invalid characters"));
+        }
+        if (!MusicPlaylistServiceUtils.isValidString(createPlaylistRequestName)) {
+            throw new InvalidAttributeValueException(String.format("The CustomerID contained invalid characters"));
+        }
+
+        Playlist playlistToCreate = new Playlist();
+        playlistToCreate.setCustomerId(createPlaylistRequestCustomerID);
+        playlistToCreate.setName(createPlaylistRequestName);
+        playlistToCreate.setId(MusicPlaylistServiceUtils.generatePlaylistId());
+        playlistToCreate.setTags(new HashSet<>());
+
+        playlistDao.savePlaylist(playlistToCreate);
+
         return CreatePlaylistResult.builder()
-                .withPlaylist(new PlaylistModel())
+                .withPlaylist(new ModelConverter().toPlaylistModel(playlistToCreate))
                 .build();
     }
 }

@@ -21,6 +21,7 @@ public final class MusicPlaylistServiceUtils {
      *         false otherwise
      */
     public static boolean isValidString(final String stringToValidate) {
+
         if (StringUtils.isBlank(stringToValidate)) {
             return false;
         }

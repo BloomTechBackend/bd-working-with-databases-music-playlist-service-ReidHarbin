@@ -1,9 +1,9 @@
 package com.amazon.ata.music.playlist.service.exceptions;
 
 /**
- * Exception to throw when a given playlist ID is not found in the database.
+ * E`xception to throw when a given playlist ID is not found in the database.`
  */
-public class PlaylistNotFoundException extends RuntimeException {
+public class PlaylistNotFoundException extends InvalidAttributeValueException {
 
     private static final long serialVersionUID = -912326717789387971L;
 

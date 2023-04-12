@@ -1,13 +1,19 @@
 @startuml
 
+
+
 PlaylistDao -o CreatePlaylistActivity
 GetPlaylistActivity o- PlaylistDao
 PlaylistDao --o UpdatePlaylistActivity
 PlaylistDao --o GetPlaylistSongsActivity
 AddSongToPlaylistActivity o-- PlaylistDao
 AddSongToPlaylistActivity o- AlbumTrackDao
-
 Playlist o-- AlbumTrack
+
+InvalidAttributeValueException <|-- AlbumTrackNotFoundException
+InvalidAttributeValueException <|-- PlaylistNotFoundException
+AttributeException <|-- InvalidAttributeValueException
+AttributeException <|-- InvalidAttributeChangeException
 
 class Playlist {
     - @DynamoDBHashKey id :  String
@@ -63,11 +69,16 @@ class PlaylistDao {
     +getPlaylist(String) : Playlist
 }
 
+class AttributeException {
+}
 class AlbumTrackNotFoundException {
 }
 class InvalidAttributeValueException {
 }
 class PlaylistNotFoundException {
 }
+class InvalidAttributeChangeException {
+}
+
 
 @enduml
