@@ -34,12 +34,12 @@ sourceSets {
 }
 
 dependencies {
-  implementation 'org.junit.jupiter:junit-jupiter:5.7.2'
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+  implementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 
-  implementation group: 'org.junit.platform', name: 'junit-platform-engine', version: '1.6.0-M1'
-  implementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.8.1'
+  implementation group: 'org.junit.platform', name: 'junit-platform-engine', version: '1.9.2'
+  implementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.9.2'
 
   implementation group: 'org.reflections', name: 'reflections', version: '0.9.12'
 
