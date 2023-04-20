@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Implementation of the CreatePlaylistActivity for the MusicPlaylistService's CreatePlaylist API.
@@ -56,18 +57,18 @@ public class CreatePlaylistActivity implements RequestHandler<CreatePlaylistRequ
 
         String createPlaylistRequestName = createPlaylistRequest.getName();
         String createPlaylistRequestCustomerID = createPlaylistRequest.getCustomerId();
-        if (!MusicPlaylistServiceUtils.isValidString(createPlaylistRequestCustomerID)) {
-            throw new InvalidAttributeValueException(String.format("The CustomerID contained invalid characters"));
-        }
-        if (!MusicPlaylistServiceUtils.isValidString(createPlaylistRequestName)) {
-            throw new InvalidAttributeValueException(String.format("The CustomerID contained invalid characters"));
-        }
 
+        if (MusicPlaylistServiceUtils.isValidString(createPlaylistRequestCustomerID) == false) {
+            throw new InvalidAttributeValueException(String.format("The CustomerID: {%s} contained invalid characters",
+                                                                    createPlaylistRequestCustomerID));
+        }
+        if (MusicPlaylistServiceUtils.isValidString(createPlaylistRequestName) == false) {
+            throw new InvalidAttributeValueException(String.format("The Name contained invalid characters"));
+        }
         Playlist playlistToCreate = new Playlist();
         playlistToCreate.setCustomerId(createPlaylistRequestCustomerID);
         playlistToCreate.setName(createPlaylistRequestName);
         playlistToCreate.setId(MusicPlaylistServiceUtils.generatePlaylistId());
-        playlistToCreate.setTags(new HashSet<>());
 
         playlistDao.savePlaylist(playlistToCreate);
 

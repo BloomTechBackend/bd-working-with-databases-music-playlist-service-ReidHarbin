@@ -16,10 +16,10 @@ public class AddSongToPlaylistActivityProvider implements RequestHandler<AddSong
 
     @Override
     public AddSongToPlaylistResult handleRequest(final AddSongToPlaylistRequest addSongToPlaylistRequest, Context context) {
-        return getDaggerServiveComponent().provideAddSongToPlaylistActivity().handleRequest(addSongToPlaylistRequest, context);
+        return getDaggerServiceComponent().provideAddSongToPlaylistActivity().handleRequest(addSongToPlaylistRequest, context);
     }
 
-    private ServiceComponent getDaggerServiveComponent() {
+    private ServiceComponent getDaggerServiceComponent() {
         return DaggerServiceComponent.create();
     }
 }

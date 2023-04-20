@@ -16,10 +16,10 @@ public class GetPlaylistSongsActivityProvider implements RequestHandler<GetPlayl
 
     @Override
     public GetPlaylistSongsResult handleRequest(final GetPlaylistSongsRequest getPlaylistSongsRequest, Context context) {
-        return getDaggerServiveComponent().provideGetPlaylistSongsActivity().handleRequest(getPlaylistSongsRequest, context);
+        return getDaggerServiceComponent().provideGetPlaylistSongsActivity().handleRequest(getPlaylistSongsRequest, context);
     }
 
-    private ServiceComponent getDaggerServiveComponent() {
+    private ServiceComponent getDaggerServiceComponent() {
         return DaggerServiceComponent.create();
     }
 }

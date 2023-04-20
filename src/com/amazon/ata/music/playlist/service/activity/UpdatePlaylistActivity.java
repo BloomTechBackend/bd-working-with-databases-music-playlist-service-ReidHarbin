@@ -65,11 +65,13 @@ public class UpdatePlaylistActivity implements RequestHandler<UpdatePlaylistRequ
         String updatePlaylistRequestId = updatePlaylistRequest.getId();
         String updatePlaylistRequestCustomerId = updatePlaylistRequest.getCustomerId();
         String updatePlaylistRequestName = updatePlaylistRequest.getName();
-        if (!MusicPlaylistServiceUtils.isValidString(updatePlaylistRequest.getId())) {
+
+
+        if (updatePlaylistRequestId != null && MusicPlaylistServiceUtils.isValidString(updatePlaylistRequestId) == false) {
             throw new InvalidAttributeValueException("Playlist Id contained invalid characters");
         }
 
-        if (!MusicPlaylistServiceUtils.isValidString(updatePlaylistRequestName)) {
+        if (updatePlaylistRequestName != null && MusicPlaylistServiceUtils.isValidString(updatePlaylistRequestName) == false) {
             throw new InvalidAttributeValueException("Playlist name contained invalid characters");
         }
         try {
@@ -79,22 +81,17 @@ public class UpdatePlaylistActivity implements RequestHandler<UpdatePlaylistRequ
         }
 
         if (!updatePlaylistRequestCustomerId.equals(playlistToUpdate.getCustomerId())) {
-            throw new InvalidAttributeChangeException("There was an attempt to change the customerId");
+            throw new InvalidAttributeChangeException("Cannot change the customerId");
         }
 
-        playlistToUpdate.setName(updatePlaylistRequest.getName());
-        playlistToUpdate.setId(updatePlaylistRequestId);
-
-        String updatedId = updatePlaylistRequestId;
-
-        if (playlistToUpdate.getTags() == null) {
-            playlistToUpdate.setTags(new HashSet<>());
+        if (updatePlaylistRequest.getName() != null) {
+            playlistToUpdate.setName(updatePlaylistRequest.getName());
         }
 
         playlistDao.savePlaylist(playlistToUpdate);
 
         return UpdatePlaylistResult.builder()
-                .withPlaylist(new ModelConverter().toPlaylistModel(playlistDao.getPlaylist(updatedId)))
+                .withPlaylist(new ModelConverter().toPlaylistModel(playlistDao.getPlaylist(playlistToUpdate.getId())))
                 .build();
     }
 }
