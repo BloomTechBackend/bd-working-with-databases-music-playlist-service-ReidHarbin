@@ -67,11 +67,11 @@ public class UpdatePlaylistActivity implements RequestHandler<UpdatePlaylistRequ
         String updatePlaylistRequestName = updatePlaylistRequest.getName();
 
 
-        if (updatePlaylistRequestId != null && MusicPlaylistServiceUtils.isValidString(updatePlaylistRequestId) == false) {
+        if (MusicPlaylistServiceUtils.isValidString(updatePlaylistRequestId) == false) {
             throw new InvalidAttributeValueException("Playlist Id contained invalid characters");
         }
 
-        if (updatePlaylistRequestName != null && MusicPlaylistServiceUtils.isValidString(updatePlaylistRequestName) == false) {
+        if (MusicPlaylistServiceUtils.isValidString(updatePlaylistRequestName) == false) {
             throw new InvalidAttributeValueException("Playlist name contained invalid characters");
         }
         try {
@@ -91,7 +91,7 @@ public class UpdatePlaylistActivity implements RequestHandler<UpdatePlaylistRequ
         playlistDao.savePlaylist(playlistToUpdate);
 
         return UpdatePlaylistResult.builder()
-                .withPlaylist(new ModelConverter().toPlaylistModel(playlistDao.getPlaylist(playlistToUpdate.getId())))
+                .withPlaylist(new ModelConverter().toPlaylistModel(playlistToUpdate))
                 .build();
     }
 }
